@@ -1,0 +1,7 @@
+#GameScreen {
+    border: 1px solid black;
+}
+
+.sameLine {
+    float: left;
+}
