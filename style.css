@@ -1,7 +1,14 @@
-#GameScreen {
-    border: 1px solid black;
+
+*, *::before, *::after {
+    box-sizing: border-box;
 }
 
-.sameLine {
-    float: left;
+#GameScreen {
+    border: 1px solid black;
+    font-size: 62.5%;
+}
+
+div {
+    margin: 1vw;
+    border: 0.1vw solid black;
 }
