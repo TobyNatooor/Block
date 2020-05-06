@@ -1,14 +1,26 @@
 
 *, *::before, *::after {
+    font-size: 62.5%;
+    margin: 0;
     box-sizing: border-box;
+}
+
+body {
+    font-size: 5rem;
+}
+
+.container {
+    max-width: 802px;
+    margin: 0 auto;
 }
 
 #GameScreen {
     border: 1px solid black;
-    font-size: 62.5%;
+    
 }
 
-div {
-    margin: 1vw;
+#theX, #theY {
+    margin: 2rem 0;
     border: 0.1vw solid black;
+    
 }
