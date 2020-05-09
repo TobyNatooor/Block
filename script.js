@@ -63,19 +63,19 @@ window.onload = function () {
         //Clears the block
         context.clearRect(0, 0, 800, 600);
         //Border 
-        // obstacle(0, 0, 800, 2)
-        // obstacle(0, 0, 2, 600)
-        // obstacle(0, 598, 800, 600)
-        // obstacle(798, 0, 800, 600)
+        obstacle(0, 0, 800, 2)
+        obstacle(0, 0, 2, 600)
+        obstacle(0, 598, 800, 600)
+        obstacle(798, 0, 800, 600)
         // // //obstacles 
-        // obstacle(300, 20, 320, 60);
-        // obstacle(400, 20, 420, 60);
-        // obstacle(350, 60, 370, 80);
-        // obstacle(300, 160, 420, 180);
-        // obstacle(400, 140, 430, 160);
+        obstacle(300, 20, 320, 60);
+        obstacle(400, 20, 420, 60);
+        obstacle(350, 60, 370, 80);
+        obstacle(300, 160, 420, 180);
+        obstacle(400, 140, 430, 160);
 
-        // obstacle(600, 400, 700, 500);
-        obstacle(1, 500, 400, 480);
+        obstacle(600, 400, 700, 500);
+        obstacle(0, 480, 400, 500);
         // Write x and y
         theX.innerHTML = "X: " + coord.x;
         theY.innerHTML = "Y: " + coord.y;
