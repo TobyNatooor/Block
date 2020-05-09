@@ -2,157 +2,126 @@
 window.onload = function () {
     let canvas = document.getElementById("GameScreen");
     let context = canvas.getContext('2d');
-    let coord = [
-        leftRight = 0,
-        upDown = 0
-    ];
-    let speed = document.getElementById("Speed");
+    let coord = { x: 100, y: 100 };
+    let speed = parseInt(document.getElementById("speed").value);
     let theX = document.getElementById("theX");
     let theY = document.getElementById("theY");
-    let htmlSpeed = document.getElementById("htmlSpeed");
-
-    let btnRight = true;
-    let btnLeft = true;
-    let btnTop = true;
-    let btnDown = true;
+    let labelSpeed = document.getElementById("labelSpeed");
+    let lastPushedKey;
 
     posistion();
-    htmlSpeed.innerHTML = "Speed: " + parseInt(speed.value);
+    labelSpeed.innerHTML = "Speed: " + speed;
 
     // Move the Red block using keys
     //Left
     document.addEventListener('keydown', function (event) {
         if (event.keyCode == 37 || event.keyCode == 65) {
-            btnRight = true;
-            btnTop = true;
-            btnDown = true;
-            if (btnLeft) {
-                console.log("Left")
-                coord[0] -= parseInt(speed.value);
-                posistion();
-            }
+            console.log("Left")
+            lastPushedKey = "left";
+            coord.x -= speed;
+            posistion();
         }
     });
     //Up
     document.addEventListener('keydown', function (event) {
         if (event.keyCode == 38 || event.keyCode == 87) {
-            btnRight = true;
-            btnLeft = true;
-            btnDown = true;
-            if (btnTop) {
-                console.log("Up")
-                coord[1] -= parseInt(speed.value);
-                posistion();
-            }
+            lastPushedKey = "up";
+            console.log("Up")
+            coord.y -= speed;
+            posistion();
         }
     });
     //Right
     document.addEventListener('keydown', function (event) {
         if (event.keyCode == 39 || event.keyCode == 68) {
-            btnLeft = true;
-            btnTop = true;
-            btnDown = true;
-            if (btnRight) {
-                console.log("Right")
-                coord[0] += parseInt(speed.value);
-                posistion();
-            }
+            lastPushedKey = "right";
+            console.log("Right")
+            coord.x += speed;
+            posistion();
         }
     });
     //Down
     document.addEventListener('keydown', function (event) {
         if (event.keyCode == 40 || event.keyCode == 83) {
-            btnRight = true;
-            btnLeft = true;
-            btnTop = true;
-            if (btnDown) {
-                console.log("Down")
-                coord[1] += parseInt(speed.value);
-                posistion();
-            }
+            lastPushedKey = "down";
+            console.log("Down")
+            coord.y += speed;
+            posistion();
         }
+    });
+
+    //Writes and changes the speed 
+    document.getElementById("speed").addEventListener('change', function () {
+        labelSpeed.innerHTML = "Speed: " + document.getElementById("speed").value;
+        speed = parseInt(document.getElementById("speed").value)
+        console.log("changed speed to " + speed)
     });
 
     function posistion() {
         //Clears the block
         context.clearRect(0, 0, 800, 600);
-        //Within border
-        obstacle(100, 200, 200, 400)
+        //Border 
+        obstacle(0, 0, 800, 2)
+        obstacle(0, 0, 2, 600)
+        obstacle(0, 598, 800, 600)
+        obstacle(798, 0, 800, 600)
+        //obstacles 
+        obstacle(300, 20, 320, 60);
+        obstacle(400, 20, 420, 60);
+        obstacle(350, 60, 370, 80);
+        obstacle(300, 160, 420, 180);
+        obstacle(400, 140, 430, 160);
+
+        obstacle(600, 400, 700, 500);
+        obstacle(120, 450, 400, 480);
         // Write x and y
-        theX.innerHTML = "X: " + coord[0];
-        theY.innerHTML = "Y: " + coord[1];
+        theX.innerHTML = "X: " + coord.x;
+        theY.innerHTML = "Y: " + coord.y;
         //Sets the new block 
         context.fillStyle = 'red';
-        context.fillRect(coord[0], coord[1], 100, 100);
+        context.fillRect(coord.x, coord.y, 100, 100);
     }
 
-    //Writes the speed 
-    speed.addEventListener('change', function () {
-        htmlSpeed.innerHTML = "Speed: " + parseInt(speed.value);
-    });
-
-    function obstacle(firstX, firstY, secondX, secondY) {
+    function obstacle(x1, y1, x2, y2) {
         context.fillStyle = 'gray';
-        context.fillRect(firstX, firstY, secondX - firstX, secondY - firstY)
-        let borderArrayX = [];
-        let borderArrayY = [];
-        borderArrayX.push("empty")
-        /*
-        for (i = 0; i < secondX; i++) {
-            borderArrayX.push(i + 1);
-            //Top
-            if (coord[0] == borderArrayX[i]) {
-                for (z = -parseInt(Speed.value); z < parseInt(Speed.value); z++) {
-                    if (coord[1] + z == firstY - 100) {
-                        console.log("borderTop")
-                        btnDown = false;
-                    }
-                }
+        context.fillRect(x1, y1, x2 - x1, y2 - y1);
+        if (x1 < coord.x + 100 &&
+            x2 > coord.x &&
+            y1 < coord.y + 100 &&
+            y2 > coord.y) {
+            console.log("obstacle!")
+            if (lastPushedKey == "right") {
+                keys()
             }
-            //Down
-            if (coord[0] == borderArrayX[i]) {
-                for (z = -parseInt(Speed.value); z < parseInt(Speed.value); z++) {
-                    if (coord[1] == secondY) {
-                        console.log("borderDown")
-                        btnTop = false;
-                    }
-                }
+            if (lastPushedKey == "left") {
+                keys()
+            }
+            if (lastPushedKey == "up") {
+                keys()
+            }
+            if (lastPushedKey == "down") {
+                keys()
             }
         }
-        */
-      
-        borderArrayY.push("empty")
-        for (i = 0; i < secondY; i++) {
-            borderArrayY.push(i + 1);
-            //Left
-            if (coord[1] == borderArrayY[i]) { //doesn't pass
-                for (z = -parseInt(Speed.value); z < parseInt(Speed.value); z++) {
-                    if (coord[0] + z == firstX - 100) {
-                        console.log("borderLeft")
-                        btnRight = false;
-                    }
-                }
-            }
-             /*
-            //Right
-            if (coord[1] == borderArrayY[i]) {
-                for (z = -parseInt(Speed.value); z < parseInt(Speed.value); z++) {
-                    if (coord[0] == secondX) {
-                        console.log("borderRight")
-                        btnLeft = false;
-                    }
-                }
-            }
-            */
-        }
-        
     }
 
+    function keys() {
+        if (lastPushedKey == "right") {
+            coord.x--;
+            posistion();
+        }
+        if (lastPushedKey == "left") {
+            coord.x++;
+            posistion();
+        }
+        if (lastPushedKey == "up") {
+            coord.y++;
+            posistion();
+        }
+        if (lastPushedKey == "down") {
+            coord.y--;
+            posistion();
+        }
+    }
 }
 
-/*
-Use of mozImageSmoothingEnabled is deprecated. Please use the unprefixed imageSmoothingEnabled property instead.
-The ‘content’ attribute of Window objects is deprecated.  Please use ‘window.top’ instead.
-onmozfullscreenchange is deprecated.
-onmozfullscreenerror is deprecated.
-*/
