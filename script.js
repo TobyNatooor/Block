@@ -88,11 +88,11 @@ window.onload = function () {
         obstacle(450, 380, 430, 230)
         obstacle(200, 150, 220, 290)
         pistol(150, 130, "up")
-        pistol(300, 130, "up")
+
         pistol(400, 130, "up")
-        pistol(500, 130, "up")
+
         pistol(550, 130, "up")
-        pistol(600, 130, "up")
+
         pistol(750, 0, "down")
         obstacle(150, 155, 715, 135)
         obstacle(715, 135, 695, 500)
