@@ -5,33 +5,37 @@ window.onload = function () {
     let theY = document.getElementById("theY");
     let labelSpeed = document.getElementById("labelSpeed");
     let timer = document.getElementById("timer");
-
     let canvas = document.getElementById("GameScreen");
     let context = canvas.getContext('2d');
-    let blockHeight = 50;
-    let blockWidth = 50;
-    let coord = { x: 100, y: 100 };
     let lastPushedKey;
     let swapVar;
     let time = 0;
+    let num = 0;
+    alertOnce = 0;
+    let distance = [0];
+
+    // adjustable 
+    let coord = { x: 70, y: 470 };
+    let blockHeight = 75;
+    let blockWidth = 75;
     let bulletSpeed = 40;
+
+
 
     theTimer()
     posistion();
     labelSpeed.innerHTML = "Speed: " + speed;
-
+    // The timer
     function theTimer() {
         setInterval(function () {
             timer.innerHTML = "Timer: " + time.toFixed(1);
-            time += 0.05;
-        }, 50)
+            time += 0.2;
+        }, 200)
     }
-
     // Move the Red block using keys
     //Left
     document.addEventListener('keydown', function (event) {
         if (event.keyCode == 37 || event.keyCode == 65) {
-            console.log("Left");
             lastPushedKey = "left";
             coord.x -= speed;
             posistion();
@@ -41,7 +45,6 @@ window.onload = function () {
     document.addEventListener('keydown', function (event) {
         if (event.keyCode == 38 || event.keyCode == 87) {
             lastPushedKey = "up";
-            console.log("Up");
             coord.y -= speed;
             posistion();
         }
@@ -50,7 +53,6 @@ window.onload = function () {
     document.addEventListener('keydown', function (event) {
         if (event.keyCode == 39 || event.keyCode == 68) {
             lastPushedKey = "right";
-            console.log("Right");
             coord.x += speed;
             posistion();
         }
@@ -59,13 +61,11 @@ window.onload = function () {
     document.addEventListener('keydown', function (event) {
         if (event.keyCode == 40 || event.keyCode == 83) {
             lastPushedKey = "down";
-            console.log("Down");
             coord.y += speed;
             posistion();
         }
     });
-
-    //Writes and changes the speed 
+    // Writes and changes the speed 
     document.getElementById("speed").addEventListener('change', function () {
         labelSpeed.innerHTML = "Speed: " + document.getElementById("speed").value;
         speed = parseInt(document.getElementById("speed").value);
@@ -73,25 +73,35 @@ window.onload = function () {
     });
 
     function posistion() {
-        //Clears the block
+        // Clears the block
         context.clearRect(0, 0, 800, 600);
         // Write x and y
         theX.innerHTML = "X: " + coord.x;
         theY.innerHTML = "Y: " + coord.y;
-        //Border 
+        // Border 
         obstacle(0, 0, 800, 0);
         obstacle(0, 0, 0, 600);
         obstacle(0, 600, 800, 600);
         obstacle(800, 0, 800, 600);
-        // // //obstacles 
-        pistol(700, 300, "left")
-        pistol(50, 400, "up");
-        pistol(50, 400, "right");
-        //Sets the new block 
+        // Obstacles 
+        obstacle(0, 400, 450, 380)
+        obstacle(450, 380, 430, 230)
+        obstacle(200, 150, 220, 290)
+        pistol(150, 130, "up")
+        pistol(300, 130, "up")
+        pistol(400, 130, "up")
+        pistol(500, 130, "up")
+        pistol(550, 130, "up")
+        pistol(600, 130, "up")
+        pistol(750, 0, "down")
+        obstacle(150, 155, 715, 135)
+        obstacle(715, 135, 695, 500)
+        obstacle(580, 600, 600, 150)
+        // Sets the new block 
         context.fillStyle = 'red';
         context.fillRect(coord.x, coord.y, blockWidth, blockHeight);
     }
-
+    // Makes a solid block
     function obstacle(x1, y1, x2, y2) {
         context.fillStyle = 'gray';
         context.fillRect(x1, y1, x2 - x1, y2 - y1);
@@ -100,61 +110,72 @@ window.onload = function () {
             keys();
         }
     }
-
+    // Makes a pistol
     function pistol(x1, y1, direction) {
-        pistolUpdate(x1, y1, direction)
+        pistolCreate(x1, y1, direction)
         setInterval(function () {
-            pistolUpdate(x1, y1, direction)
-        }, 100);
+            pistolCreate(x1, y1, direction)
+        }, 150);
     }
-
-    function pistolUpdate(x1, y1, direction) {
+    // Creates the pistol and bullets
+    function pistolCreate(x1, y1, direction) {
         let x = 0;
         let y = 0;
         let t = 0;
         let u = 0;
         let v = 0;
         let w = 0;
-        if (direction == "left") {
-            x = -1 * time;
-            t = 5;
+        if (time.toFixed(1) == num) {
+            num += 5;
+            distance.push(num - 5)
         }
-        if (direction == "right") {
-            x = 1 * time;
-            u = 5;
+        for (i = 0; i < distance.length; i++) {
+            if (direction == "left") {
+                x = -time + distance[i];
+                t = 8;
+            }
+            if (direction == "right") {
+                x = time - distance[i];
+                u = 8;
+            }
+            if (direction == "up") {
+                y = -time + distance[i];
+                w = 8;
+            }
+            if (direction == "down") {
+                y = time - distance[i];
+                v = 8;
+            }
+            if (border(
+                x1 + 5 + x * bulletSpeed,
+                y1 + 5 + y * bulletSpeed,
+                x1 + 5 + x * bulletSpeed + 15,
+                y1 + 5 + y * bulletSpeed + 15
+            )) {
+                coord.x = 70;
+                coord.y = 470;
+                posistion();
+            }
+            if (coord.x < 620 && coord.x > 599 &&
+                coord.y < 300 && coord.y > 160 && alertOnce == 0) {
+                    alertOnce++;
+                    alert("You Win!");
+                }
+            x2 = x1 + 25;
+            y2 = y1 + 25;
+            context.clearRect(
+                x1 + 5 + x * bulletSpeed - u,
+                y1 + 5 + y * bulletSpeed - v,
+                15 + t, 15 + w);
+            context.fillStyle = "green";
+            context.fillRect(
+                x1 + 5 + x * bulletSpeed,
+                y1 + 5 + y * bulletSpeed,
+                15, 15);
         }
-        if (direction == "up") {
-            y = -1 * time;
-            w = 5;
-        }
-        if (direction == "down") {
-            y = +1 * time;
-            v = 5;
-        }
-        if (border(
-            x1 + 5 + x * bulletSpeed,
-            y1 + 5 + y * bulletSpeed,
-            x1 + 5 + x * bulletSpeed + 15,
-            y1 + 5 + y * bulletSpeed + 15
-        )) {
-            coord.x = 100;
-            coord.y = 100;
-            posistion();
-        }
-        x2 = x1 + 25;
-        y2 = y1 + 25;
-        context.clearRect(
-            x1 + 5 + x * bulletSpeed - u, 
-            y1 + 5 + y * bulletSpeed - v, 
-            15 + t, 15 + w);
         obstacle(x1, y1, x2, y2);
-        context.fillStyle = "green";
-        context.fillRect(
-            x1 + 5 + x * bulletSpeed, 
-            y1 + 5 + y * bulletSpeed, 
-            15, 15);
     }
-
+    // Makes the solid border of obstacles
     function border(x1, y1, x2, y2) {
         if (x1 > x2) {
             swapVar = x2;
@@ -173,7 +194,7 @@ window.onload = function () {
             return true;
         }
     }
-
+    // Moves main block
     function keys() {
         if (lastPushedKey == "right") {
             coord.x--;
