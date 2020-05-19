@@ -12,13 +12,14 @@ window.onload = function () {
     let time = 0;
     let num = 0;
     alertOnce = 0;
-    let distance = [0];
+    let distance = [];
 
     // adjustable 
     let coord = { x: 70, y: 470 };
     let blockHeight = 75;
     let blockWidth = 75;
     let bulletSpeed = 40;
+    let bulletDisdance = 800;
 
 
 
@@ -29,7 +30,7 @@ window.onload = function () {
     function theTimer() {
         setInterval(function () {
             timer.innerHTML = "Timer: " + time.toFixed(1);
-            time += 0.2;
+            time += 0.1;
         }, 200)
     }
     // Move the Red block using keys
@@ -78,6 +79,8 @@ window.onload = function () {
         // Write x and y
         theX.innerHTML = "X: " + coord.x;
         theY.innerHTML = "Y: " + coord.y;
+        //WIN
+        winnerSpot(695, 150, 600, 250, 'green');
         // Border 
         obstacle(0, 0, 800, 0);
         obstacle(0, 0, 0, 600);
@@ -88,22 +91,24 @@ window.onload = function () {
         obstacle(450, 380, 430, 230)
         obstacle(200, 150, 220, 290)
         pistol(150, 130, "up")
-
         pistol(400, 130, "up")
-
         pistol(550, 130, "up")
-
         pistol(750, 0, "down")
         obstacle(150, 155, 715, 135)
         obstacle(715, 135, 695, 500)
         obstacle(580, 600, 600, 150)
         // Sets the new block 
-        context.fillStyle = 'red';
+        context.fillStyle = 'blue';
         context.fillRect(coord.x, coord.y, blockWidth, blockHeight);
     }
     // Makes a solid block
-    function obstacle(x1, y1, x2, y2) {
-        context.fillStyle = 'gray';
+    function obstacle(x1, y1, x2, y2, color) {
+        if (color) {
+            context.fillStyle = color;
+        }
+        else {
+            context.fillStyle = 'gray';
+        }
         context.fillRect(x1, y1, x2 - x1, y2 - y1);
         if (border(x1, y1, x2, y2)) {
             console.log("obstacle!");
@@ -146,6 +151,13 @@ window.onload = function () {
                 y = time - distance[i];
                 v = 8;
             }
+            if ((y1 + 5 + y * bulletSpeed) > bulletDisdance + y1 ||
+                (y1 + 5 + y * bulletSpeed) < -bulletDisdance + y1 ||
+                (x1 + 5 + x * bulletSpeed) > bulletDisdance + x1 ||
+                (x1 + 5 + x * bulletSpeed) < -bulletDisdance + x1
+            ) {
+                distance.shift();
+            }
             if (border(
                 x1 + 5 + x * bulletSpeed,
                 y1 + 5 + y * bulletSpeed,
@@ -156,24 +168,19 @@ window.onload = function () {
                 coord.y = 470;
                 posistion();
             }
-            if (coord.x < 620 && coord.x > 599 &&
-                coord.y < 300 && coord.y > 160 && alertOnce == 0) {
-                    alertOnce++;
-                    alert("You Win!");
-                }
             x2 = x1 + 25;
             y2 = y1 + 25;
             context.clearRect(
                 x1 + 5 + x * bulletSpeed - u,
                 y1 + 5 + y * bulletSpeed - v,
                 15 + t, 15 + w);
-            context.fillStyle = "green";
+            context.fillStyle = "red";
             context.fillRect(
                 x1 + 5 + x * bulletSpeed,
                 y1 + 5 + y * bulletSpeed,
                 15, 15);
         }
-        obstacle(x1, y1, x2, y2);
+        obstacle(x1, y1, x2, y2, 'black');
     }
     // Makes the solid border of obstacles
     function border(x1, y1, x2, y2) {
@@ -192,6 +199,14 @@ window.onload = function () {
             y1 < coord.y + blockHeight &&
             y2 > coord.y) {
             return true;
+        }
+    }
+    // Winner spot 
+    function winnerSpot(x1, y1, x2, y2, color) {
+        obstacle(x1, y1, x2, y2, color)
+        if (border(x1 - 1, y1 - 1, x2 + 1, y2 + 1)) {
+            console.log("win")
+            alert("You Win!")
         }
     }
     // Moves main block
